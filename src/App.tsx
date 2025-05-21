@@ -6,7 +6,10 @@ interface Habit {
   id: number;
   name: string;
   completed: boolean;
+  lastCompleted?: string; // ISO date string (e.g. "2025-05.21")
 }
+
+const getTodayDate = () => new Date().toISOString().split("T")[0];
 
 function App() {
   const [habits, setHabits] = useState<Habit[]>(() => {
@@ -17,6 +20,15 @@ function App() {
   useEffect(() => {
   localStorage.setItem("habits", JSON.stringify(habits));
 }, [habits]);
+
+  useEffect(() => {
+    const today = getTodayDate();
+    const updated = habits.map((habit) => ({
+      ...habit,
+      completed: habit.lastCompleted === today,
+    }));
+    setHabits(updated);
+  }, []);
 
   const addHabit = (name: string) => {
     const newHabit = {
@@ -29,11 +41,21 @@ function App() {
   };
 
   const toggleHabit = (id: number) => {
-    const updated = habits.map((habit) =>
-      habit.id === id ? { ...habit, completed: !habit.completed } : habit
-    );
+    const today = getTodayDate();
+
+    const updated = habits.map((habit) => {
+      if (habit.id === id) {
+        const isCompletedToday = habit.lastCompleted === today;
+        return {
+          ...habit,
+          completed: !isCompletedToday,
+          lastCompleted: isCompletedToday ? undefined : today,
+        };
+      }
+      return habit;
+    });
     setHabits(updated);
-  }
+  };
 
   const deleteHabit = (id: number) => {
     const filtered = habits.filter((habit) => habit.id !== id);
