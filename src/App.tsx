@@ -35,11 +35,22 @@ function App() {
     setHabits(updated);
   }
 
+  const deleteHabit = (id: number) => {
+    const filtered = habits.filter((habit) => habit.id !== id);
+    setHabits(filtered);
+  };
+
   return ( 
     <div className="max-w-xl mx-auto p-4 text-center">
       <h1 className="text-2xl font-bold mb-4">Habit Tracker</h1>
-      <HabitForm addHabit={addHabit} />
-      <HabitList habits={habits} toggleHabit={toggleHabit} />
+      <HabitForm 
+        addHabit={addHabit} 
+      />
+      <HabitList 
+        habits={habits} 
+        toggleHabit={toggleHabit} 
+        deleteHabit={deleteHabit}
+      />
     </div> 
   );
 }

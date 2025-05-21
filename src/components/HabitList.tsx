@@ -9,9 +9,10 @@ interface Habit {
 interface HabitListProps {
     habits: Habit[];
     toggleHabit: (id: number) => void;
+    deleteHabit: (id: number) => void;
 }
 
-function HabitList({ habits, toggleHabit }: HabitListProps) {
+function HabitList({ habits, toggleHabit, deleteHabit }: HabitListProps) {
     if (habits.length === 0) {
         return <p className="text-gray-500">No habits yet.</p>;
     }
@@ -19,7 +20,12 @@ function HabitList({ habits, toggleHabit }: HabitListProps) {
     return (
         <ul className="text-left">
             {habits.map((habit) => (
-                <HabitItem key={habit.id} habit={habit} toggleHabit={toggleHabit} />
+                <HabitItem
+                 key={habit.id} 
+                 habit={habit} 
+                 toggleHabit={toggleHabit}
+                 deleteHabit={deleteHabit}
+                />
             ))}
         </ul>
     );
