@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HabitForm from './components/HabitForm';
 import HabitList from "./components/HabitList";
 
@@ -9,7 +9,14 @@ interface Habit {
 }
 
 function App() {
-  const [habits, setHabits] = useState<Habit[]>([]);
+  const [habits, setHabits] = useState<Habit[]>(() => {
+    const saved = localStorage.getItem("habits");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+  localStorage.setItem("habits", JSON.stringify(habits));
+}, [habits]);
 
   const addHabit = (name: string) => {
     const newHabit = {
